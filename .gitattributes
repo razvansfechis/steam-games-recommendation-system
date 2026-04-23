@@ -3,3 +3,4 @@ data/5_steam_games_data.csv filter=lfs diff=lfs merge=lfs -text
 data_6_steam_games_more_data.csv filter=lfs diff=lfs merge=lfs -text
 data/6_steam_games_more_data.csv filter=lfs diff=lfs merge=lfs -text
 data/7_steam_games_cleaned_data.csv filter=lfs diff=lfs merge=lfs -text
+data/8_steam_games_translated_data.csv filter=lfs diff=lfs merge=lfs -text

@@ -8,3 +8,5 @@ data/9_steam_games_all_translated_data.csv filter=lfs diff=lfs merge=lfs -text
 data/10_steam_games_cleaned_translated_and_no_description_data.csv filter=lfs diff=lfs merge=lfs -text
 data/11_steam_games_cleaned_descriptions.csv filter=lfs diff=lfs merge=lfs -text
 data/12_steam_games_cleaned_descriptions.csv filter=lfs diff=lfs merge=lfs -text
+data/12_steam_games_lemmatized_descriptions.csv filter=lfs diff=lfs merge=lfs -text
+data/13_steam_games_tags_list.csv filter=lfs diff=lfs merge=lfs -text

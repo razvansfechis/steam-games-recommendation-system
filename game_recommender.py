@@ -16,9 +16,9 @@ def build_recommendation_system(df):
     tfidf = TfidfVectorizer(stop_words='english')
     tfidf_matrix = tfidf.fit_transform(df['description_and_tags'])
 
-    # Transform the game's data (positive_ratings_percentile, avg_no_owners, median_playtime) to data between 0 and 1
+    # Transform the game's data (positive_ratings_percentage, avg_no_owners, median_playtime) to data between 0 and 1
     # and fill the missing data with 0
-    games_data = ['positive_ratings_percentile', 'avg_no_owners', 'median_playtime']
+    games_data = ['positive_ratings_percentage', 'avg_no_owners', 'median_playtime']
     scaled_games_data = MinMaxScaler().fit_transform(df[games_data].fillna(0))
 
     # This creates a score from the scaled games data above with the dot product of the assigned weight for
@@ -41,7 +41,7 @@ def get_recommendations(selected_game, df, tfidf_matrix, top_n=5):
 
     # Give an importance score for each value. In here I deemed tags_description_similarity more than twice as important
     # as the market likeness similarity
-    df['score'] = (tags_description_similarity * 0.70) + (market_likeness_similarity * 0.30)
+    df['score'] = (tags_description_similarity * 0.80) + (market_likeness_similarity * 0.20)
 
     selected_games = df[df['name'].str.lower() != selected_game.lower()]
 

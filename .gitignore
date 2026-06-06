@@ -3,3 +3,4 @@ data/data-for-testing/1-users-recommendations.csv
 data/data-for-testing/2-users-recommendations-sorted.csv
 data/data-for-testing/3-users-recommendations-only-likes.csv
 data/data-for-testing/4-users-recommendation-no-useless-columns.csv
+__pycache__/

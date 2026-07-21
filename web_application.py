@@ -8,9 +8,13 @@ st.set_page_config(page_title="Steam Recommender", layout="wide")
 st.title("Steam Games Recommender System")
 
 
-# Background (unchanged but shorter)
-with open("background.jpg", "rb") as f:
-    img = base64.b64encode(f.read()).decode()
+@st.cache_data
+def get_background_b64():
+    with open("background.jpg", "rb") as f:
+        return base64.b64encode(f.read()).decode()
+
+
+img = get_background_b64()
 
 st.markdown(
     f"""

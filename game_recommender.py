@@ -20,7 +20,7 @@ def build_recommendation_system(df):
         df[["positive_ratings_percentage", "avg_no_owners", "median_playtime"]].fillna(0)
     )
 
-    df["market_score"] = scaled @ np.array([0.1, 0.9, 0.0]) # multiply the scaled market values by the weights
+    df["market_score"] = scaled @ np.array([0.2, 0.7, 0.1]) # multiply the scaled market values by the weights
 
     return tfidf_matrix, df
 
@@ -31,7 +31,7 @@ def get_recommendations(game_name, df, tfidf_matrix, top_n=5):
     similarity = linear_kernel(tfidf_matrix[game_index], tfidf_matrix).ravel() # gets the similarity and transforms
                                                                         # the array from 2D to 1D using ravel method
 
-    score = 0.1 * similarity + 0.9 * df["market_score"].values
+    score = 0.8 * similarity + 0.2 * df["market_score"].values
 
     df["score"] = score
 

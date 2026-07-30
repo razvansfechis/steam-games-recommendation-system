@@ -29,7 +29,7 @@ st.markdown(
 )
 
 
-@st.cache_resource
+@st.cache_resource(show_spinner="Loading the data...")
 def load_data():
     df = pd.read_csv("data/13_steam_games_final.csv")
     return game_recommender.build_recommendation_system(df)
@@ -37,9 +37,18 @@ def load_data():
 
 tfidf_matrix, df = load_data()
 
-game = st.selectbox("Choose a game:", df["name"].unique())
+query = st.text_input("Search for a game:")
 
-if st.button("Recommend"):
+game = None
+if query:
+    matches = df[df["name"].str.contains(query, case=False, na=False)]
+    top_matches = matches.sort_values("market_score", ascending=False)["name"].unique()[:100]
+    if len(top_matches) > 0:
+        game = st.selectbox("Select from matches:", top_matches)
+    else:
+        st.info("No games found matching that search.")
+
+if game and st.button("Recommend"):
     recs = game_recommender.get_recommendations(game, df, tfidf_matrix)
 
     st.subheader("You might also like:")

@@ -18,10 +18,12 @@ I've played on Steam for years and often struggled to find new games I'd like, s
 
 ```
 popularity = 0.2 × positive ratings % + 0.7 × number of owners + 0.1 × median playtime   (each scaled to 0–1)
-score      = 0.3 × text similarity + 0.7 × popularity
+score      = 0.75 × text similarity + 0.25 × popularity
 ```
 
-Popularity gets the larger weight, based on the assumption that players more often choose popular games than games that are only similar.
+Owners and median playtime are log-scaled before scaling to 0–1, because a few games have over 100 million owners while most have around 10,000.
+
+The thesis version used 0.3 × text similarity + 0.7 × popularity with raw owner counts. That recommended the same 5 popular games for every input and scored about the same as just recommending the most popular games. Log-scaling the owners and tuning the weights on a separate set of 1,000 users fixed this.
 
 The 5 games with the highest score are recommended, excluding the selected game itself.
 
@@ -33,15 +35,15 @@ The recommender was evaluated offline with **Recall@K** on real Steam user revie
 - For each user, one liked game is the input and another liked game is the target
 - A hit means the target appears in the top K recommendations
 
-| Metric | Result |
-|---|---|
-| Recall@5 | 1% |
-| Recall@50 | 9% |
-| Recall@500 | 25% |
-| Recall@5000 | 45% |
+| Version | Recall@5 | Recall@50 | Recall@500 | Recall@5000 |
+|---|---|---|---|---|
+| Popularity only (baseline) | 1% | 7% | 36% | 36% |
+| Thesis version (0.3 / 0.7, raw owners) | 1% | 9% | 25% | 45% |
+| **Current (0.75 / 0.25, log-scaled)** | 0% | 5% | 34% | **79%** |
 
-The system tends to find related games, but does not always rank them at the very top.
+The current version finds the target in the top 5,000 for 79% of users, compared to 36% for the baseline, and recommends different games for different inputs. 
 
+By searching only 6% of the catalog (the top 5,000 of 81,160 games), the current version finds a game the user actually liked for 79% of users.
 ## Tech stack
 
 - **Language:** Python
@@ -84,13 +86,14 @@ On Windows PowerShell, replace the first line with:
 ## Limitations
 
 - **Item-based:** recommendations come from a single selected game, not from a user's whole library.
-- **Popularity bias:** popularity makes up 70% of the score, so the same well-known games are often recommended, whatever game is selected.
+- **Weak top-of-list ranking:** low Recall@5 and Recall@50, as shown above.
+- **Text matching:** TF-IDF matches words, not meaning, so a game can be recommended just because it shares a word in its name (e.g. "Ring" for Elden Ring).
 - Games are matched by name, so two games with the same name can be confused.
-- The evaluation has no baseline yet, and the input and target games are not picked by review date.
+- The evaluation has only a popularity baseline, and the input and target games are not picked by review date.
 
 ## Next steps
 
-- Add a popularity baseline to the evaluation and report more metrics (NDCG, coverage, etc.)
+- Report more metrics (NDCG, coverage) and evaluate on more users
 - Import a user's Steam library for personalized recommendations
 - Try sentence embeddings next to TF-IDF and compare the results
 - Rebuild as a full-stack app: a REST API, a React frontend and a database

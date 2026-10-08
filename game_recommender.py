@@ -31,7 +31,7 @@ def get_recommendations(game_name, df, tfidf_matrix, top_n=5):
     similarity = linear_kernel(tfidf_matrix[game_index], tfidf_matrix).ravel() # gets the similarity and transforms
                                                                         # the array from 2D to 1D using ravel method
 
-    score = 0.8 * similarity + 0.2 * df["market_score"].values
+    score = 0.3 * similarity + 0.7 * df["market_score"].values
 
     df["score"] = score
 
